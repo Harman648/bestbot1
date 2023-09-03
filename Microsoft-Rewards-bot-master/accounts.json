@@ -1,0 +1,12 @@
+[
+    {
+        "username": "example1@gmail.com",
+        "password": "password1",
+        "goal": "Amazon"
+    },
+    {
+        "username": "example2@gmail.com",
+        "password": "password2",
+        "goal": "Amazon"
+    }
+]
