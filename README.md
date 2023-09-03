@@ -5,8 +5,6 @@
   <img src="https://ForTheBadge.com/images/badges/built-with-love.svg" alt="cosmetic"/>
 </p>
 
-<h3 align="center"><a href="https://telegram.me/MRF_FZ">join Telegram group</a></h3>
-
 <pre align="center">
 ███╗   ███╗███████╗    ███████╗ █████╗ ██████╗ ███╗   ███╗███████╗██████╗ 
 ████╗ ████║██╔════╝    ██╔════╝██╔══██╗██╔══██╗████╗ ████║██╔════╝██╔══██╗
@@ -14,7 +12,7 @@
 ██║╚██╔╝██║╚════██║    ██╔══╝  ██╔══██║██╔══██╗██║╚██╔╝██║██╔══╝  ██╔══██╗
 ██║ ╚═╝ ██║███████║    ██║     ██║  ██║██║  ██║██║ ╚═╝ ██║███████╗██║  ██║
 ╚═╝     ╚═╝╚══════╝    ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝
-        built by @charlesbel upgraded by @farshadz1997      version 2.0
+        built by @charlesbel upgraded by @me      version 2.0
 </pre>
 
 <p align="center">
@@ -24,17 +22,6 @@
 
 <h2 align="center">👋 Welcome to the future of automation</h2>
 <h3 align="center">A simple bot written in Python that uses selenium to farm Microsoft Rewards.</h3>
-<details align="center">
-  <summary><h3>GUI versions available</h3></summary>
-  <details>
-    <summary><h4><a href="https://github.com/farshadz1997/Microsoft-Rewards-bot-GUI">PyQt5 version of bot</a></h4></summary>
-    <img src="https://user-images.githubusercontent.com/60227955/206023577-f933334c-edf3-49fe-b30e-12d806847ab7.png" alt="cosmetic">
-  </details>
-  <details>
-    <summary><h4><a href="https://github.com/farshadz1997/Microsoft-Rewards-bot-GUI-V2">⭐️New version powered by Flet framework⭐️</a></h4></summary>
-    <img src="https://user-images.githubusercontent.com/60227955/218319443-3f5ea317-e759-4e4c-a847-926b240e2806.png" alt="cosmetic">
-  </details>
-</details>
 
 <h2 align="center">Installation</h2>
 <p allign="center">You can also find this repository on <a href="https://gitlab.com/farshadzargary1997/Microsoft-Rewards-bot">Gitlab</a>.
