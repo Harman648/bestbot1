@@ -1,1 +1,0 @@
-python ms_rewards_farmer.py --superfast --session --dont-check-for-updates --shuffle --telegram 6032519992:AAGouXHWhmHF_4kOeelxdYgdN8g6mOHZ7Kg 1333143123 --currency INR
