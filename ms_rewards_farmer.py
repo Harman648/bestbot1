@@ -19,7 +19,7 @@ import requests
 import pyotp
 from functools import wraps
 from func_timeout import FunctionTimedOut, func_set_timeout
-from notifiers import get_notifier
+from telegram import Bot
 from urllib.error import ContentTooShortError
 from selenium_stealth import stealth
 import undetected_chromedriver as uc
@@ -2516,15 +2516,14 @@ def sendReportToMessenger(message):
 
 def sendToTelegram(message):
     """send to telegram"""
-    t = get_notifier('telegram')
+    bot = Bot(token=ARGS.telegram[0])
+
     if len(message) > 4096:
         messages = [message[i:i+4096] for i in range(0, len(message), 4096)]
         for ms in messages:
-            t.notify(
-                message=ms, token=ARGS.telegram[0], chat_id=ARGS.telegram[1])
+            bot.send_message(chat_id=ARGS.telegram[1], text=ms)
     else:
-        t.notify(message=message,
-                 token=ARGS.telegram[0], chat_id=ARGS.telegram[1])
+        bot.send_message(chat_id=ARGS.telegram[1], text=message)
 
 
 def sendToDiscord(message):
