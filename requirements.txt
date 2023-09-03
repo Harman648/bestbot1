@@ -10,7 +10,7 @@ func_timeout
 random-word==1.0.7
 pyyaml
 pyotp
-notifiers
+python-telegram-bot
 pyvirtualdisplay
 webdriver-manager>=3.9.0
 undetected-chromedriver
