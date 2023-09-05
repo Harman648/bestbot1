@@ -48,8 +48,9 @@ from exceptions import *
 # Define user-agents
 PC_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36 Edg/115.0.1901.203'
 MOBILE_USER_AGENT = 'Mozilla/5.0 (Linux; Android 12; SM-N9750) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Mobile Safari/537.36 EdgA/115.0.1901.203'
-
+ABS = 'D:\\ms-rewards-abs-x-bot-main\\MSR_Toolkit.crx'
 POINTS_COUNTER = 0
+SearchFinish = False
 
 SHOPPING_RIGHT = 0
 SHOPPING_ATTEMPT = 0
@@ -216,6 +217,7 @@ def browserSetup(isMobile: bool, user_agent: str = PC_USER_AGENT, proxy: str = N
             browser = uc.Chrome(options=options)
             browser.maximize_window()
         else:
+            options.add_extension(ABS)
             browser = webdriver.Chrome(options=options) if ARGS.no_webdriver_manager else webdriver.Chrome(
                 service=Service(ChromeDriverManager().install()), options=options)
             stealth(
@@ -914,6 +916,307 @@ def getAccountPoints(browser: WebDriver) -> int:
     """Get account points"""
     return getDashboardData(browser)['userStatus']['availablePoints']
 
+def perform_searches(browser, remainingSearches, remainingSearchesM):
+    browser.get(BASE_URL)
+    wait = WebDriverWait(browser, 100)
+    element = wait.until(ec.presence_of_element_located((By.XPATH, '//*[@id="meeGradientBanner"]/div/div/div/p')))
+    level_text = element.text
+    browser.get('https://rewards.bing.com/pointsbreakdown')
+    wait = WebDriverWait(browser, 50)
+    if level_text == 'Level 1':
+        remainingSearch = int(remainingSearches)
+        remainingSearchesf = remainingSearch + 3
+        browser.execute_script("window.open()")
+        browser.switch_to.window(browser.window_handles[1])
+        time.sleep(random.uniform(3, 5))
+        if remainingSearches == 0:
+            print('[Bing] Searches already completed')
+        else:
+            mobile = 0
+            browser.get('chrome-extension://ipbgaooglppjombmbgebgmaehjkfabme/Index.html')
+            abs1text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="desktop-iterations"]')))
+            abs1text.clear()
+            abs1text.send_keys(remainingSearchesf) 
+            abs2text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="mobile-iterations')))
+            abs2text.clear()
+            abs2text.send_keys(mobile) 
+            abs3text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="delay"]')))
+            abs3text.clear()
+            abs3text.send_keys(2000)
+            startsearch = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="search"]')))
+            startsearch.click()
+            last_page_change_time = time.time()
+            last_url = browser.current_url
+            last_title = browser.title
+            while True:
+                current_url = browser.current_url
+                current_title = browser.title
+                if current_url != last_url or current_title != last_title:
+                    last_page_change_time = time.time()
+                    last_url = current_url
+                    last_title = current_title
+                else:
+                    if time.time() - last_page_change_time > 10:
+                        
+                        break
+                    time.sleep(1)
+            browser.close()
+            browser.switch_to.window(browser.window_handles[0])
+    else:
+        remainingSearch = int(remainingSearches)
+        remainingSearchesf = remainingSearch + 3
+        remainingSearchM = int(remainingSearchesM)
+        remainingSearchMf = remainingSearchM + 2
+        browser.execute_script("window.open()")
+        browser.switch_to.window(browser.window_handles[1])
+        time.sleep(random.uniform(3, 5))
+        if remainingSearches == 0:
+            if remainingSearchesM == 0:
+                print('[Bing] Searches already completed')
+            else:
+                # Switch to the newly opened tab
+                browser.switch_to.window(browser.window_handles[-1])
+                browser.get('chrome-extension://ipbgaooglppjombmbgebgmaehjkfabme/Index.html')
+                abs1text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="desktop-iterations"]')))
+                abs1text.clear()
+                abs1text.send_keys(remainingSearchesf) 
+                startsearch = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="mobile-iterations"]')))
+                abs2text.clear()
+                abs2text.send_keys(remainingSearchMf)
+                abs3text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="delay"]')))
+                abs3text.clear()
+                abs3text.send_keys(2000)
+                startsearch = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="search"]')))
+                startsearch.click()
+                last_page_change_time = time.time()
+                last_url = browser.current_url
+                last_title = browser.title
+                while True:
+                    current_url = browser.current_url
+                    current_title = browser.title
+                    if current_url != last_url or current_title != last_title:
+                        last_page_change_time = time.time()
+                        last_url = current_url
+                        last_title = current_title
+                    else:
+                        if time.time() - last_page_change_time > 10:
+                            
+                            break
+                        time.sleep(1)
+        else:
+            if remainingSearchesM == 0:
+                mobile = 0
+                # Switch to the newly opened tab
+                browser.switch_to.window(browser.window_handles[-1])
+                browser.get('chrome-extension://ipbgaooglppjombmbgebgmaehjkfabme/Index.html')
+                abs1text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="desktop-iterations"]')))
+                abs1text.clear()
+                abs1text.send_keys(remainingSearchesf)
+                abs2text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="mobile-iterations"]')))
+                abs2text.clear()
+                abs2text.send_keys(mobile)
+                abs3text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="delay"]')))
+                abs3text.clear()
+                abs3text.send_keys(2000)
+                startsearch = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="search"]')))
+                startsearch.click()
+                last_page_change_time = time.time()
+                last_url = browser.current_url
+                last_title = browser.title
+                while True:
+                    current_url = browser.current_url
+                    current_title = browser.title
+                    if current_url != last_url or current_title != last_title:
+                        last_page_change_time = time.time()
+                        last_url = current_url
+                        last_title = current_title
+                    else:
+                        if time.time() - last_page_change_time > 10:
+                            
+                            break
+                        time.sleep(1)
+            else:
+                browser.switch_to.window(browser.window_handles[-1])
+                browser.get('chrome-extension://ipbgaooglppjombmbgebgmaehjkfabme/Index.html')
+                abs1text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="desktop-iterations"]')))
+                abs1text.clear()
+                abs1text.send_keys(remainingSearchesf) 
+                abs2text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="mobile-iterations"]')))
+                abs2text.clear()
+                abs2text.send_keys(remainingSearchMf)
+                abs3text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="delay"]')))
+                abs3text.clear()
+                abs3text.send_keys(2000)
+                startsearch = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="search"]')))
+                startsearch.click()
+                last_page_change_time = time.time()
+                last_url = browser.current_url
+                last_title = browser.title
+                while True:
+                    current_url = browser.current_url
+                    current_title = browser.title
+                    if current_url != last_url or current_title != last_title:
+                        last_page_change_time = time.time()
+                        last_url = current_url
+                        last_title = current_title
+                    else:
+                        if time.time() - last_page_change_time > 10:
+                            
+                            break
+                        time.sleep(1)
+    browser.close()
+    time.sleep(random.uniform(2, 4))
+    browser.switch_to.window(browser.window_handles[0])
+
+
+def verify_searches(browser, remainingSearches, remainingSearchesM):
+    wait = WebDriverWait(browser, 100)
+    element = wait.until(ec.presence_of_element_located((By.XPATH, '//*[@id="meeGradientBanner"]/div/div/div/p')))
+    level_text = element.text
+    browser.get('https://rewards.bing.com/pointsbreakdown')
+    wait = WebDriverWait(browser, 50)
+    if level_text == 'Level 1':
+        remainingSearch = int(remainingSearches)
+        remainingSearchesf = remainingSearch + 3
+        browser.execute_script("window.open()")
+        if remainingSearches == 0:
+            pass
+        else:
+            mobile = 0
+            # Switch to the newly opened tab
+            browser.switch_to.window(browser.window_handles[1])
+            browser.get('extension://ipbgaooglppjombmbgebgmaehjkfabme/Index.html')
+            abs1text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="desktop-iterations"]')))
+            abs1text.clear()
+            abs1text.send_keys(remainingSearchesf) 
+            abs2text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="mobile-iterations"]')))
+            abs2text.clear()
+            abs2text.send_keys(mobile) 
+            abs3text =wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="delay"]')))
+            abs3text.clear()
+            abs3text.send_keys(2000)
+            startsearch = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="search"]')))
+            startsearch.click()
+            last_page_change_time = time.time()
+            last_url = browser.current_url
+            last_title = browser.title
+            while True:
+                current_url = browser.current_url
+                current_title = browser.title
+                if current_url != last_url or current_title != last_title:
+                    last_page_change_time = time.time()
+                    last_url = current_url
+                    last_title = current_title
+                else:
+                    if time.time() - last_page_change_time > 10:
+                        
+                        break
+                    time.sleep(1)
+    else:
+        remainingSearch = int(remainingSearches)
+        remainingSearchesf = remainingSearch + 2
+        remainingSearchM = int(remainingSearchesM)
+        remainingSearchMf = remainingSearchM + 2
+        browser.execute_script("window.open()")
+        if remainingSearches == 0:
+            if remainingSearchM == 0:
+                pass
+            else:
+                pc = 0
+                # Switch to the newly opened tab
+                browser.switch_to.window(browser.window_handles[1])
+                browser.get('chrome-extension://ipbgaooglppjombmbgebgmaehjkfabme/Index.html')
+                abs1text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="desktop-iterations"]')))
+                abs1text.clear()
+                abs1text.send_keys(pc) 
+                abs2text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="mobile-iterations"]')))
+                abs2text.clear()
+                abs2text.send_keys(remainingSearchMf)
+                abs3text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="delay"]')))
+                abs3text.clear()
+                abs3text.send_keys(2000)
+                startsearch = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="search"]')))
+                startsearch.click()
+                last_page_change_time = time.time()
+                last_url = browser.current_url
+                last_title = browser.title
+                while True:
+                    current_url = browser.current_url
+                    current_title = browser.title
+                    if current_url != last_url or current_title != last_title:
+                        last_page_change_time = time.time()
+                        last_url = current_url
+                        last_title = current_title
+                    else:
+                        if time.time() - last_page_change_time > 10:
+                            
+                            break
+                        time.sleep(1)
+        else:
+            if remainingSearchesM == 0:
+                mobile = 0
+                # Switch to the newly opened tab
+                browser.switch_to.window(browser.window_handles[1])
+                browser.get('chrome-extension://ipbgaooglppjombmbgebgmaehjkfabme/Index.html')
+                abs1text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="desktop-iterations"]')))
+                abs1text.clear()
+                abs1text.send_keys(remainingSearchesf)
+                abs2text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="mobile-iterations"]')))
+                abs2text.clear()
+                abs2text.send_keys(mobile)
+                abs3text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="delay"]')))
+                abs3text.clear()
+                abs3text.send_keys(2000)
+                startsearch = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="search"]')))
+                startsearch.click()
+                last_page_change_time = time.time()
+                last_url = browser.current_url
+                last_title = browser.title
+                while True:
+                    current_url = browser.current_url
+                    current_title = browser.title
+                    if current_url != last_url or current_title != last_title:
+                        last_page_change_time = time.time()
+                        last_url = current_url
+                        last_title = current_title
+                    else:
+                        if time.time() - last_page_change_time > 10:
+                            
+                            break
+                        time.sleep(1)
+            else:
+                # Switch to the newly opened tab
+                browser.switch_to.window(browser.window_handles[1])
+                browser.get('chrome-extension://ipbgaooglppjombmbgebgmaehjkfabme/Index.html')
+                abs1text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="desktop-iterations"]')))
+                abs1text.clear()
+                abs1text.send_keys(remainingSearchesf) 
+                abs2text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="mobile-iterations"]')))
+                abs2text.clear()
+                abs2text.send_keys(remainingSearchMf)
+                abs3text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="delay"]')))
+                abs3text.clear()
+                abs3text.send_keys(2000)
+                startsearch = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="search"]')))
+                startsearch.click()
+                last_page_change_time = time.time()
+                last_url = browser.current_url
+                last_title = browser.title
+                while True:
+                    current_url = browser.current_url
+                    current_title = browser.title
+                    if current_url != last_url or current_title != last_title:
+                        last_page_change_time = time.time()
+                        last_url = current_url
+                        last_title = current_title
+                    else:
+                        if time.time() - last_page_change_time > 10:
+                            
+                            break
+                        time.sleep(1)
+    browser.close()
+    browser.switch_to.window(browser.window_handles[0])
+
 
 def bingSearches(browser: WebDriver, numberOfSearches: int, isMobile: bool = False):
     """Search Bing"""
@@ -964,7 +1267,7 @@ def bingSearches(browser: WebDriver, numberOfSearches: int, isMobile: bool = Fal
                 searchbar.send_keys(char)
                 time.sleep(random.uniform(0.2, 0.45))
         searchbar.submit()
-        time.sleep(calculateSleep(15))
+        time.sleep(random.randint(3, 4))
         points = 0
         try:
             if not isMobile:
@@ -1610,22 +1913,26 @@ def completeMorePromotions(browser: WebDriver):
     prGreen('[MORE PROMO] Completed More Promotions successfully !')
 
 def completeShoppingQuiz(browser: WebDriver):
-    print(' startscroll')
     for j in range(1, 8):
         height = 1000 * j
         browser.execute_script(f"window.scrollTo(0, {height});")
         time.sleep(2)
 
+    if browser.execute_script(GAMESTATE) == "idle":
+        SHOPPING_ATTEMPT = MAX_SHOPPING_ATTEMPT
+        raise GamingCardIsNotActive
+    
+    print("[MSN GAME] Executing single answer script")
     browser.execute_script(MAINSCRIPT)
-    time.sleep(2)
+    time.sleep(random.randint(5,7))
     try:
         while (
             SHOPPING_ATTEMPT < MAX_SHOPPING_ATTEMPT and SHOPPING_RIGHT < 10
         ):  # SHOPPING_ATTEMPT
             shoppingQuiz(browser)
-        print("[SHOP] Completed Shopping successfully !")
+        print("[MSN GAME] Completed Shopping successfully !")
     except Exception as e:
-        prRed("[SHOP] Something exploded !")
+        prRed("[MSN GAME] Something exploded !")
         print(e)
         pass
     time.sleep(random.randint(10, 15))
@@ -1640,7 +1947,7 @@ def shoppingQuiz(browser: WebDriver):
     
     time.sleep(1)
     if browser.execute_script(GAMESTATE) == "idle":
-        print("[SHOP] Shopping already done!")
+        print("[MSN GAME] Shopping already done!")
         SHOPPING_ATTEMPT = MAX_SHOPPING_ATTEMPT
         return
     browser.execute_script(SCRIPT)
@@ -1650,31 +1957,25 @@ def shoppingQuiz(browser: WebDriver):
         SHOPPING_ATTEMPT += 1
         if browser.execute_script(GAMESTATE) == "lose":
             print('game state lose')
-            prRed("[SHOP] Something gone wrong!")
+            prRed("[MSN GAME] Something gone wrong!")
             return
         clickXY(browser, 620, 200)
-        directory_path = "./database/shopping/screenshots/"
-
-        if not os.path.exists(directory_path):
-            os.makedirs(directory_path)
-
-        browser.save_screenshot(f"{directory_path}{SHOPPING_ATTEMPT}screenshot.png")
 
         if browser.execute_script(GAMESTATE) == "win":
             SHOPPING_RIGHT += 1
             print(
-                f"[SHOP] Shopping Attempt {SHOPPING_ATTEMPT}: It got one! {SHOPPING_RIGHT}/10"
+                f"[MSN GAME] Shopping Attempt {SHOPPING_ATTEMPT}: It got one! {SHOPPING_RIGHT}/10"
             )
             browser.execute_script(SCRIPT)
             time.sleep(2)
             return
         elif browser.execute_script(GAMESTATE) == "idle":
-            print("[SHOP] Shopping already done!")
+            print("[MSN GAME] Shopping already done!")
             SHOPPING_ATTEMPT = MAX_SHOPPING_ATTEMPT
             return
         else:
             print(
-                f"[SHOP] Shopping Attempt {SHOPPING_ATTEMPT}: {SHOPPING_RIGHT}/10"
+                f"[MSN GAME] Shopping Attempt {SHOPPING_ATTEMPT}: {SHOPPING_RIGHT}/10"
             )
         time.sleep(7)
 
@@ -3136,41 +3437,41 @@ def farmer():
                             "Running repeated MSN shopping. It will likely result in error due to msn shopping likely completed")
                     if not finished:
                         completeMSNShoppingGame(browser, account['username'], account['password'], account.get('totpSecret'))
+
                 remainingSearches, remainingSearchesM = getRemainingSearches(
                     browser)
+                
                 MOBILE = bool(remainingSearchesM)
+                print('[BING]', 'Completing searches...')
                 if remainingSearches != 0:
-                    print('[BING]', 'Starting Desktop and Edge Bing searches...')
-                    bingSearches(browser, remainingSearches)
-                    prGreen(
-                        '\n[BING] Finished Desktop and Edge Bing searches !')
+                    perform_searches(browser, remainingSearches, remainingSearchesM)
+                else:
+                    if remainingSearchesM !=0:
+                        perform_searches(browser, remainingSearches, remainingSearchesM)
+                    else:
+                        SearchFinish = True
+                        prGreen('[BING] Searches already completed!')
+
+                remainingSearches, remainingSearchesM = getRemainingSearches(
+                browser)
+
+                if remainingSearches != 0:
+                    version(browser, remainingSearches, remainingSearchesM)
+                    prGreen('[BING] Searches completed!')
+                else:
+                    if remainingSearchesM !=0:
+                        verify_searches(browser, remainingSearches, remainingSearchesM)
+                        prGreen('[BING] Searches completed!')
+                    else:
+                        if SearchFinish:
+                            SearchFinish = False
+                            pass
+                        else:
+                            prGreen('[BING] Searches completed!')
+
                 LOGS[CURRENT_ACCOUNT]['PC searches'] = True
                 updateLogs()
                 ERROR = False
-                browser.quit()
-
-            if MOBILE:
-                browser = browserSetup(
-                    True,
-                    account.get('mobile_user_agent', MOBILE_USER_AGENT),
-                    account.get('proxy', None)
-                )
-                print('[LOGIN]', 'Logging-in mobile...')
-                login(browser, account['username'], account['password'], account.get(
-                    'totpSecret', None), True)
-                prGreen('[LOGIN] Logged-in successfully !')
-                if LOGS[account['username']]['PC searches'] and ERROR:
-                    STARTING_POINTS = POINTS_COUNTER
-                    goToURL(browser, BASE_URL)
-                    waitUntilVisible(browser, By.ID, 'app-host', 30)
-                    redeem_goal_title, redeem_goal_price = getRedeemGoal(
-                        browser)
-                    remainingSearches, remainingSearchesM = getRemainingSearches(
-                        browser)
-                if remainingSearchesM != 0:
-                    print('[BING]', 'Starting Mobile Bing searches...')
-                    bingSearches(browser, remainingSearchesM, True)
-                    prGreen('\n[BING] Finished Mobile Bing searches !')
                 browser.quit()
 
             if redeem_goal_title != "" and redeem_goal_price <= POINTS_COUNTER:
