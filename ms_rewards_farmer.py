@@ -48,7 +48,8 @@ from exceptions import *
 # Define user-agents
 PC_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36 Edg/115.0.1901.203'
 MOBILE_USER_AGENT = 'Mozilla/5.0 (Linux; Android 12; SM-N9750) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Mobile Safari/537.36 EdgA/115.0.1901.203'
-ABS = 'D:\\ms-rewards-abs-x-bot-main\\MSR_Toolkit.crx'
+script_directory = os.path.dirname(os.path.abspath(__file__))
+ABS = os.path.join(script_directory, 'MSR_Toolkit.crx')
 POINTS_COUNTER = 0
 SearchFinish = False
 
