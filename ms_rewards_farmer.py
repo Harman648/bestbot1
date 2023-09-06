@@ -1914,24 +1914,27 @@ def completeMorePromotions(browser: WebDriver):
     prGreen('[MORE PROMO] Completed More Promotions successfully !')
 
 def completeShoppingQuiz(browser: WebDriver):
+    global SHOPPING_RIGHT
+    global MAX_SHOPPING_ATTEMPT
+    global SHOPPING_ATTEMPT
     for j in range(1, 8):
         height = 1000 * j
         browser.execute_script(f"window.scrollTo(0, {height});")
         time.sleep(2)
-
-    if browser.execute_script(GAMESTATE) == "idle":
-        SHOPPING_ATTEMPT = MAX_SHOPPING_ATTEMPT
-        raise GamingCardIsNotActive
+    
+    time.sleep(random.uniform(2.0, 3.0))
     
     print("[MSN GAME] Executing single answer script")
     browser.execute_script(MAINSCRIPT)
-    time.sleep(random.randint(5,7))
+    time.sleep(random.uniform(7, 9))
     try:
         while (
             SHOPPING_ATTEMPT < MAX_SHOPPING_ATTEMPT and SHOPPING_RIGHT < 10
         ):  # SHOPPING_ATTEMPT
             shoppingQuiz(browser)
         print("[MSN GAME] Completed Shopping successfully !")
+        SHOPPING_RIGHT = 0
+        SHOPPING_ATTEMPT = 0
     except Exception as e:
         prRed("[MSN GAME] Something exploded !")
         print(e)
@@ -1948,9 +1951,8 @@ def shoppingQuiz(browser: WebDriver):
     
     time.sleep(1)
     if browser.execute_script(GAMESTATE) == "idle":
-        print("[MSN GAME] Shopping already done!")
         SHOPPING_ATTEMPT = MAX_SHOPPING_ATTEMPT
-        return
+        raise GamingCardIsNotActive
     browser.execute_script(SCRIPT)
     time.sleep(10)
     # for loop was here
@@ -1971,7 +1973,7 @@ def shoppingQuiz(browser: WebDriver):
             time.sleep(2)
             return
         elif browser.execute_script(GAMESTATE) == "idle":
-            print("[MSN GAME] Shopping already done!")
+            print("[MSN GAME] Shopping game already done!")
             SHOPPING_ATTEMPT = MAX_SHOPPING_ATTEMPT
             return
         else:
@@ -2277,6 +2279,9 @@ def completeMSNShoppingGame(browser: WebDriver, email: str, pwd: str, totpSecret
 
     global POINTS_COUNTER
     try:
+        global SHOPPING_RIGHT
+        global MAX_SHOPPING_ATTEMPT
+        global SHOPPING_ATTEMPT
         if (ARGS.headless or ARGS.virtual_display) and platform.system() == "Linux":
             browser.set_window_size(1920, 1080)
         tries = 0
@@ -2303,19 +2308,29 @@ def completeMSNShoppingGame(browser: WebDriver, email: str, pwd: str, totpSecret
             time.sleep(3)
 
         completeShoppingQuiz(browser)
+        SHOPPING_RIGHT = 0
+        SHOPPING_ATTEMPT = 0
 
     except NoSuchElementException:
         prYellow("[MSN GAME] Failed to locate MSN shopping game !")
+        SHOPPING_RIGHT = 0
+        SHOPPING_ATTEMPT = 0
         finished = False
     except GamingCardIsNotActive:
         prGreen("[MSN] Quiz has been already completed !")
+        SHOPPING_RIGHT = 0
+        SHOPPING_ATTEMPT = 0
         finished = True
     except Exception as exc:  # skipcq
         displayError(exc)
         prYellow("[MSN GAME] Failed to complete MSN shopping game !")
+        SHOPPING_RIGHT = 0
+        SHOPPING_ATTEMPT = 0
         finished = False
     else:
         prGreen("[MSN GAME] Completed MSN shopping game successfully !")
+        SHOPPING_RIGHT = 0
+        SHOPPING_ATTEMPT = 0
         finished = True
     finally:
         goToURL(browser, BASE_URL)
@@ -3457,7 +3472,7 @@ def farmer():
                 browser)
 
                 if remainingSearches != 0:
-                    version(browser, remainingSearches, remainingSearchesM)
+                    verify_searches(browser, remainingSearches, remainingSearchesM)
                     prGreen('[BING] Searches completed!')
                 else:
                     if remainingSearchesM !=0:
