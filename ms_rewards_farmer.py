@@ -44,6 +44,16 @@ from math import ceil
 import tempfile
 from exceptions import *
 
+# Create logs folder if it doesn't exist
+current_directory = os.path.dirname(os.path.abspath(__file__))
+folder_name = "logs"
+folder_path = os.path.join(current_directory, folder_name)
+
+if not os.path.exists(folder_path):
+    os.makedirs(folder_path)
+    print(f"The '{folder_name}' folder has been created.")
+else:
+    pass
 
 # Define user-agents
 PC_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36 Edg/115.0.1901.203'
