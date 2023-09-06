@@ -938,7 +938,7 @@ def perform_searches(browser, remainingSearches, remainingSearchesM):
             abs1text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="desktop-iterations"]')))
             abs1text.clear()
             abs1text.send_keys(remainingSearchesf) 
-            abs2text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="mobile-iterations')))
+            abs2text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="mobile-iterations"]')))
             abs2text.clear()
             abs2text.send_keys(mobile) 
             abs3text = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="delay"]')))
